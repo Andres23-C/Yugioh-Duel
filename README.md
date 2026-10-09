@@ -5,9 +5,11 @@ Autores: Marlon Andres Cuella y Nicol Vanessa Peña
 
 ## Ejecución
 
-## Requisitos: Java 11 o superior y conexión a internet (las cartas y sus imágenes se descargan en vivo).
+## Requisitos: 
+Java 11 o superior y conexión a internet (las cartas y sus imágenes se descargan en vivo).
 
-## Dependencia: org.json, incluida en lib/json-20230227.jar. No se usan frameworks pesados.
+## Dependencia: 
+org.json, incluida en lib/json-20230227.jar. No se usan frameworks pesados.
 
 En IntelliJ IDEA
 Abre la carpeta del proyecto.
