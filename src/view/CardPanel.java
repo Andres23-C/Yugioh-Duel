@@ -46,13 +46,27 @@ public class CardPanel extends JPanel {
     // Pinta los datos de la carta
     public void mostrarCarta(Card c) {
         this.carta = c;
-        this.usada = false;
+        reiniciar();
         // html + width: los nombres largos se parten en varias líneas
         lblNombre.setText("<html><body style='width:120px;text-align:center'>"
                 + c.getNombre() + "</body></html>");
         lblStats.setText("ATK " + c.getAtk() + " | DEF " + c.getDef());
-        btnElegir.setText("Elegir carta");
         cargarImagen(c.getImagenUrl());
+    }
+
+    // Quita el botón "Elegir carta" (para las cartas de la máquina, que solo se ven)
+    public void ocultarBoton() {
+        btnElegir.setVisible(false);
+    }
+
+    // Deja la carta como nueva (sin volver a descargar la imagen). Sirve para reiniciar el duelo.
+    public void reiniciar() {
+        usada = false;
+        btnElegir.setText("Elegir carta");
+        btnElegir.setEnabled(false); // la ventana lo habilita con setElegible(true)
+        lblImagen.setEnabled(true);
+        lblNombre.setEnabled(true);
+        lblStats.setEnabled(true);
     }
 
     // La ventana indica qué hacer cuando se pulsa "Elegir carta".
@@ -72,6 +86,8 @@ public class CardPanel extends JPanel {
         btnElegir.setEnabled(false);
         btnElegir.setText("Usada");
         lblImagen.setEnabled(false); // Swing pone la imagen en gris
+        lblNombre.setEnabled(false);
+        lblStats.setEnabled(false);
     }
 
     public Card getCarta() {
