@@ -1,55 +1,102 @@
 ## Yugioh-Duel
 
-Aplicación de escritorio en Java (Swing) que consume la API de YGOProDeck para recrear un duelo sencillo de Yu-Gi-Oh! entre el jugador y la máquina, como parte del Laboratorio #1 de Desarrollo de Software III (Universidad del Valle, Sede Tuluá).
-Autores: Marlon Andres Cuella y Nicol Vanessa Peña 
+Aplicación de escritorio en Java Swing que consulta la API de YGOProDeck y simula un duelo sencillo de Yu-Gi-Oh! entre el jugador y la máquina. Laboratorio #1 de Desarrollo de Software III, Universidad del Valle, Sede Tuluá.
 
-## Requisitos: 
-Java 11 o superior y conexión a internet (las cartas y sus imágenes se descargan en vivo).
+Autores: Marlon Andres Cuellar y Nicol Vanessa Peña Jimenez
 
-## Dependencia: 
-org.json, incluida en lib/json-20230227.jar. No se usan frameworks pesados.
+## Características
 
-## Ejecución
-En IntelliJ IDEA
-Abre la carpeta del proyecto.
-Clic derecho sobre lib/json-20230227.jar > Add as Library... > OK.
-Marca src como Sources Root si no lo está (clic derecho > Mark Directory as).
-Ejecuta la clase view.MainWindow.
-Por terminal (PowerShell)
-powershell
+- Carga de 3 cartas Monster para el jugador y 3 para la máquina, de forma aleatoria, desde la API de YGOProDeck (imagen oficial, nombre, ATK y DEF). Si la API devuelve una carta que no es Monster, se vuelve a pedir.
+- Se muestran las cartas de ambos lados: las del jugador con botón **Elegir carta** y las de la máquina solo visibles. Las cartas ya usadas se ponen en gris.
+- Duelo por rondas: el primero en ganar 2 rondas gana el duelo.
+- Turno inicial aleatorio: quien tiene la iniciativa juega primero (si es la máquina, su carta se ve antes de elegir la tuya).
+- Log de batalla desplazable con quién jugó qué carta, el resultado de cada ronda, el marcador y el ganador final.
+- Botones para cargar cartas nuevas y para reiniciar el duelo con las mismas cartas, sin congelar la ventana.
+- Errores visibles en pantalla ("No se pudo cargar la carta", "Error de red").
+
+## Requisitos
+
+- JDK 11 o superior (el proyecto se desarrolló con JDK 27)
+- IntelliJ IDEA (o cualquier IDE que abra proyectos IntelliJ)
+- Conexión a internet (para consultar la API y descargar las imágenes de las cartas)
+- Librería `lib/json-20230227.jar` (ya incluida en el repositorio)
+
+## Instrucciones de ejecución
+
+1. Clonar el repositorio:
+   ```
+   git clone https://github.com/Andres23-C/Yugioh-Duel.git
+   ```
+2. Abrir la carpeta del proyecto en IntelliJ.
+3. Marcar `src` como **Sources Root** si no lo está (clic derecho sobre `src` → **Mark Directory as**).
+4. Agregar la librería JSON: clic derecho sobre `lib/json-20230227.jar` → **Add as Library...** (o **File → Project Structure → Libraries → + → Java** y seleccionar el jar).
+5. Ejecutar la clase `view.MainWindow`.
+6. Al abrir la ventana se cargan solas las cartas. Pulsar **Iniciar duelo**.
+7. Elegir una carta con **Elegir carta** en cada ronda hasta que alguien llegue a 2 rondas ganadas.
+8. Con **Reiniciar duelo** se juega de nuevo con las mismas cartas; con **Cargar cartas** se piden cartas nuevas.
+
+Opcional, por terminal (PowerShell):
+```
 javac -encoding UTF-8 -cp lib/json-20230227.jar -d out (Get-ChildItem -Recurse src -Filter *.java).FullName
 java -cp "out;lib/json-20230227.jar" view.MainWindow
-Cómo se juega
-Al abrir la ventana se cargan solas 3 cartas Monster para el jugador y 3 para la máquina. Con Cargar cartas se piden cartas nuevas.
-Se muestran las cartas de ambos lados con imagen, nombre, ATK y DEF. Las de la máquina solo se ven; las tuyas tienen el botón Elegir carta.
-Iniciar duelo habilita las cartas. En cada ronda eliges una; la máquina juega una al azar entre las que le quedan. Las cartas usadas se ponen en gris.
-El ganador de la ronda suma 1 punto. El primero en llegar a 2 rondas gana el duelo, y el log lo anuncia.
-Reiniciar duelo empieza de nuevo con las mismas cartas, incluso a mitad de partida.
-Diseño
+```
 
-El proyecto separa la interfaz, la lógica y el acceso a datos en paquetes con responsabilidades claras:
+## Estructura del proyecto
 
-api: YgoApiClient consulta randomcard.php con java.net.http.HttpClient, interpreta el JSON con org.json y vuelve a pedir la carta si no es de tipo Monster. No conoce la interfaz: ante un fallo lanza una excepción y la ventana decide qué mostrar ("No se pudo cargar la carta", "Error de red").
-model: Card (nombre, ATK, DEF y URL de la imagen).
-battle: Duel contiene las reglas y BattleListener define los eventos onTurn, onScoreChanged y onDuelEnded (más onRoundDetail, opcional, con la explicación de cada ronda). Duel nunca toca la interfaz: solo avisa al listener.
-view: MainWindow implementa BattleListener y actualiza marcador y log (JTextArea + JScrollPane); CardPanel dibuja una carta. Las peticiones de red y la descarga de imágenes corren en hilos de fondo con SwingWorker, así la interfaz nunca se bloquea.
-Reglas del duelo (decisiones de diseño)
+```
+src/
+├── api/      YgoApiClient: consulta la API y construye las cartas Monster
+├── model/    Card: nombre, ATK, DEF y URL de la imagen
+├── battle/   BattleListener, Duel y DuelDemo: lógica del duelo
+└── view/     MainWindow y CardPanel: interfaz Swing
+lib/          json-20230227.jar
+```
 
-El enunciado compara ATK contra DEF pero no dice quién está en ataque o en defensa, así que se definió así:
+`DuelDemo` es una prueba en consola de las reglas, sin ventana ni internet.
 
-Cada carta adopta su mejor posición: si ATK >= DEF está en ataque y combate con su ATK; si no, está en defensa y combate con su DEF.
-Ambas en ataque: gana el mayor ATK. Una en ataque y otra en defensa: se compara el ATK del atacante contra el DEF del defensor. Ambas en defensa (caso no previsto en el enunciado): gana el mayor DEF.
-El turno inicial se sortea al crear el duelo. Quien tiene la iniciativa gana los empates, y la iniciativa se alterna en cada ronda, por lo que nunca hay empate.
-Cada carta se usa una sola vez. Con 3 rondas como máximo, siempre hay un ganador.
-Estructura
-Yugioh-Duel
-├── lib/json-20230227.jar
-└── src
-    ├── api/    YgoApiClient
-    ├── model/  Card
-    ├── battle/ BattleListener, Duel, DuelDemo
-    └── view/   MainWindow, CardPanel
+## Reglas del duelo
 
-DuelDemo es una prueba en consola de las reglas, sin ventana ni internet.
+El enunciado compara ATK contra DEF pero no aclara quién está en ataque y quién en defensa, por eso se definieron estas reglas:
+
+| Regla | Detalle |
+|---|---|
+| Cartas | 3 por jugador, cada una se usa una sola vez |
+| Carta de la máquina | Elige al azar entre las que le quedan |
+| Quién inicia | Se sortea al crear el duelo; la iniciativa se alterna en cada ronda |
+| Posición de cada carta | Mejor posición: si `ATK >= DEF` está en **ataque** (combate con su ATK); si no, en **defensa** (combate con su DEF) |
+| Ambas en ataque | Gana el mayor ATK |
+| Una en ataque y otra en defensa | Se compara el ATK del atacante contra el DEF del defensor |
+| Ambas en defensa | Gana el mayor DEF (caso no previsto en el enunciado) |
+| Empate | Gana quien tiene la iniciativa en esa ronda, por eso nunca hay empate |
+| Punto de ronda | El ganador de cada ronda obtiene 1 punto |
+| Fin del duelo | El primero en llegar a 2 rondas gana (como máximo 3 rondas) |
+
+## Diseño
+
+La lógica del duelo está en el paquete `battle`, separada por completo de la interfaz. La clase `Duel` decide quién inicia, deja que la máquina elija su carta al azar, compara ATK contra DEF y lleva el marcador, y notifica lo ocurrido a través de la interfaz `BattleListener`, siguiendo el patrón Observer. Así la lógica se puede probar sin ventana (con `DuelDemo`), y la interfaz solo se actualiza reaccionando a los eventos `onTurn`, `onScoreChanged` y `onDuelEnded`, más dos eventos opcionales: `onRoundDetail` (explica por qué ganó cada ronda) y `onMachinePlays` (la máquina juega primero cuando tiene la iniciativa).
+
+Para no bloquear la ventana, las peticiones a la API (`HttpClient`) y la descarga de las imágenes se hacen con `SwingWorker`, y los resultados se pintan de vuelta en el hilo de Swing. `Duel` no necesita hilos propios porque no hace llamadas de red. Valida los datos de entrada (3 cartas por lado, índices válidos, cartas no repetidas) y actualiza todo su estado antes de avisar al listener, de modo que el duelo siempre termina y nunca queda inconsistente.
 
 ## Capturas de pantalla
+
+<!-- Guardar las imágenes en la carpeta Capturas y ajustar los nombres -->
+
+### Interfaz principal
+
+![Interfaz principal](Capturas/Pantalla_inicial.jpeg)
+
+### Cartas cargadas
+
+![Cartas cargadas](Capturas/Cartas_cargadas.jpeg)
+
+### Duelo en curso
+
+![Duelo en curso](Capturas/Duelo_en_curso.jpeg)
+
+### Ganador final
+
+![Ganador final](Capturas/Ganador.jpeg)
+
+### Error de red
+
+![Error de red](Capturas/Error_de_red.jpeg)
