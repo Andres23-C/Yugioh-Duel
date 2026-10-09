@@ -1,12 +1,13 @@
-Yugioh-Duel
+## Yugioh-Duel
 
 Aplicación de escritorio en Java (Swing) que consume la API de YGOProDeck para recrear un duelo sencillo de Yu-Gi-Oh! entre el jugador y la máquina, como parte del Laboratorio #1 de Desarrollo de Software III (Universidad del Valle, Sede Tuluá).
+Autores: Marlon Andres Cuella y Nicol Vanessa Peña 
 
-Ejecución
+## Ejecución
 
-Requisitos: Java 11 o superior y conexión a internet (las cartas y sus imágenes se descargan en vivo).
+## Requisitos: Java 11 o superior y conexión a internet (las cartas y sus imágenes se descargan en vivo).
 
-Dependencia: org.json, incluida en lib/json-20230227.jar. No se usan frameworks pesados.
+## Dependencia: org.json, incluida en lib/json-20230227.jar. No se usan frameworks pesados.
 
 En IntelliJ IDEA
 Abre la carpeta del proyecto.
@@ -50,4 +51,4 @@ Yugioh-Duel
 
 DuelDemo es una prueba en consola de las reglas, sin ventana ni internet.
 
-Capturas de pantalla
+## Capturas de pantalla
