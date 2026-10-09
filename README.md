@@ -83,20 +83,20 @@ Para no bloquear la ventana, las peticiones a la API (`HttpClient`) y la descarg
 
 ### Interfaz principal
 
-![Interfaz principal](Capturas/Pantalla_inicial.jpeg)
+![Interfaz principal](Capturas/cargando_interfaz.png)
 
 ### Cartas cargadas
 
-![Cartas cargadas](Capturas/Cartas_cargadas.jpeg)
+![Cartas cargadas](Capturas/cartas_cargadas.png)
 
 ### Duelo en curso
 
-![Duelo en curso](Capturas/Duelo_en_curso.jpeg)
+![Duelo en curso](Capturas/combate.png)
 
-### Ganador final
+### Duelo Reiniciado
 
-![Ganador final](Capturas/Ganador.jpeg)
+![Duelo Reiniciado](Capturas/reinicio_duelo.png)
 
-### Error de red
+### Nuevas Cartas
 
-![Error de red](Capturas/Error_de_red.jpeg)
+![Nuevas Cartas](Capturas/cargar_nuevas_cartas.png)
