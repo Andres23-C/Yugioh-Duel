@@ -3,14 +3,13 @@
 Aplicación de escritorio en Java (Swing) que consume la API de YGOProDeck para recrear un duelo sencillo de Yu-Gi-Oh! entre el jugador y la máquina, como parte del Laboratorio #1 de Desarrollo de Software III (Universidad del Valle, Sede Tuluá).
 Autores: Marlon Andres Cuella y Nicol Vanessa Peña 
 
-## Ejecución
-
 ## Requisitos: 
 Java 11 o superior y conexión a internet (las cartas y sus imágenes se descargan en vivo).
 
 ## Dependencia: 
 org.json, incluida en lib/json-20230227.jar. No se usan frameworks pesados.
 
+## Ejecución
 En IntelliJ IDEA
 Abre la carpeta del proyecto.
 Clic derecho sobre lib/json-20230227.jar > Add as Library... > OK.
